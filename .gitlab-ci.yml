@@ -52,5 +52,6 @@ phpunit:
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
+    - touch database/database.sqlite
     - php artisan key:generate
     - XDEBUG_MODE=coverage phpunit --coverage-text --colors=never
