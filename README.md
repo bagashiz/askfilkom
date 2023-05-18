@@ -9,11 +9,12 @@ Sebuah forum diskusi di mana mahasiswa dapat membuat unggahan pertanyaan dan bis
 - User dapat melakukan reset password dari akun user
 - User dapat melihat pertanyaan di website
 - User dapat membuat pertanyaan di website
+- User dapat mengubah properti yang dimiliki suatu pertanyaan (judul, topik, dan deskripsi)
 - User dapat menghapus pertanyaan yang telah dibuat
-- User dapat mengubah properti yang dimiliki suatu pertanyaan (judul,topik,deskripsi)
-- User dapat memberikan  jawaban pada pertanyaan
+- User dapat memberikan jawaban pada pertanyaan
 - User dapat memberikan vote pada pertanyaan
-- User dapat mencari pertanyaan yang telah terbuat
+- User dapat memberikan vote pada jawaban
+- User dapat mencari pertanyaan yang ada di dalam sistem
 - User dapat melakukan pencarian berdasarkan topik
 - User dapat melakukan sortir pencarian berdasarkan waktu unggah dan jumlah vote
 - Admin dapat melakukan proses autentikasi untuk masuk ke dalam sistem
@@ -23,7 +24,7 @@ Sebuah forum diskusi di mana mahasiswa dapat membuat unggahan pertanyaan dan bis
 
 ## Service Implementation
 
-```
+```plain
 GIVEN => User ingin melakukan autentikasi untuk masuk ke dalam sistem
 WHEN => User memasukkan username dan password pada form autentikasi dan menekan tombol "Masuk"
 THEN => Sistem akan memvalidasi informasi yang diberikan, mengarahkan user ke halaman utama, dan memberikan notifikasi bahwa autentikasi berhasil dilakukan.
@@ -40,13 +41,13 @@ GIVEN => User ingin membuat pertanyaan di website
 WHEN => User mengklik tombol "Buat Pertanyaan" pada halaman pertanyaan dan mengisi form yang diberikan
 THEN => Sistem akan memvalidasi informasi yang diberikan, membuat pertanyaan baru untuk user, dan mengarahkan user ke halaman pertanyaan yang baru saja dibuat.
 
-GIVEN => User ingin menghapus pertanyaan yang telah dibuat
-WHEN => User mengklik tombol "Hapus" pada halaman pertanyaan yang ingin dihapus
-THEN => Sistem akan memvalidasi bahwa user memiliki hak untuk menghapus pertanyaan tersebut, menghapus pertanyaan dari sistem, dan mengarahkan user ke halaman pertanyaan yang masih tersedia.
-
 GIVEN => User ingin mengubah properti yang dimiliki suatu pertanyaan (judul, topik, deskripsi)
 WHEN => User mengklik tombol "Ubah" pada halaman pertanyaan yang ingin diubah dan mengisi form yang diberikan
 THEN => Sistem akan memvalidasi informasi yang diberikan, mengubah properti dari pertanyaan yang dimaksud, dan mengarahkan user ke halaman pertanyaan yang telah diubah.
+
+GIVEN => User ingin menghapus pertanyaan yang telah dibuat
+WHEN => User mengklik tombol "Hapus" pada halaman pertanyaan yang ingin dihapus
+THEN => Sistem akan memvalidasi bahwa user memiliki hak untuk menghapus pertanyaan tersebut, menghapus pertanyaan dari sistem, dan mengarahkan user ke halaman pertanyaan yang masih tersedia.
 
 GIVEN => User ingin memberikan jawaban pada pertanyaan
 WHEN => User mengisi form jawaban yang tersedia pada halaman pertanyaan
@@ -56,7 +57,15 @@ GIVEN => User ingin memberikan vote pada pertanyaan
 WHEN => User mengklik tombol "Vote" pada halaman pertanyaan
 THEN => Sistem akan memvalidasi informasi yang diberikan, menambahkan vote baru pada pertanyaan, dan mengarahkan user ke halaman pertanyaan yang telah diberi vote baru.
 
+GIVEN => User ingin memberikan vote pada jawaban
+WHEN => User mengklik tombol "Vote" pada jawaban yang ada pada halaman pertanyaan
+THEN => Sistem akan memvalidasi informasi yang diberikan, menambahkan vote baru pada jawaban, dan mengarahkan user ke halaman pertanyaan yang telah diberi vote baru.
+
 GIVEN => User ingin mencari pertanyaan yang telah terbuat
+WHEN => User memasukkan kata kunci pada kolom pencarian pada halaman pertanyaan dan menekan tombol "Cari"
+THEN => Sistem akan mencari pertanyaan yang sesuai dengan kata kunci yang diberikan oleh user dan menampilkan hasil pencarian pada halaman pertanyaan.
+
+GIVEN => User ingin mencari pertanyaan berdasarkan kata kunci
 WHEN => User memasukkan kata kunci pada kolom pencarian pada halaman pertanyaan dan menekan tombol "Cari"
 THEN => Sistem akan mencari pertanyaan yang sesuai dengan kata kunci yang diberikan oleh user dan menampilkan hasil pencarian pada halaman pertanyaan.
 
@@ -84,3 +93,7 @@ GIVEN => Admin ingin menghapus komentar yang diberikan dari user
 WHEN => Admin memilih opsi "Hapus" pada halaman komentar yang ingin dihapus dan menekan tombol "Konfirmasi"
 THEN => Sistem akan memvalidasi bahwa admin memiliki hak untuk menghapus komentar tersebut, menghapus komentar dari sistem, dan mengarahkan admin ke halaman pertanyaan yang berkaitan dengan komentar yang dihapus.
 ```
+
+## Entity Relationship Diagram
+
+![ERD](./assets/askfilkom-erd.jpg)
