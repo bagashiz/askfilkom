@@ -1,5 +1,11 @@
 image: lorisleiva/laravel-docker:8.1
 
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: always
+    - when: never
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
