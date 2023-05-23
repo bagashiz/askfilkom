@@ -60,4 +60,5 @@ phpunit:
     - cp .env.example .env
     - touch database/database.sqlite
     - php artisan key:generate
+    - php artisan key:generate --env=testing
     - XDEBUG_MODE=coverage phpunit --coverage-text --colors=never
