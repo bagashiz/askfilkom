@@ -53,7 +53,7 @@ class UserController extends Controller
             'users.show',
             [
                 'user' => $user,
-                'pertanyaan' => $user->pertanyaan()->where('id_user', $user->id_user)->latest()->paginate(5),
+                'pertanyaan' => $user->pertanyaan()->latest()->paginate(5),
             ]
         );
     }
@@ -71,7 +71,7 @@ class UserController extends Controller
             'users.profile',
             [
                 'user' => $user,
-                'pertanyaan' => $user->pertanyaan()->where('id_user', $user->id_user)->latest()->paginate(5),
+                'pertanyaan' => $user->pertanyaan()->latest()->paginate(5),
             ]
         );
     }
@@ -100,6 +100,28 @@ class UserController extends Controller
     }
 
     /**
+     * EditByAdmin redirects to the user profile edit page by admin.
+     *
+     * @param User $user
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function editByAdmin(User $user): \Illuminate\Contracts\View\View
+    {
+        $isAdmin = auth()->user()->is_admin;
+
+        if (!$isAdmin) {
+            return abort(403);
+        }
+
+        return view(
+            'users.edit',
+            [
+                'user' => $user,
+            ]
+        );
+    }
+
+    /**
      * Update updates user profile by admin.
      *
      * @param Request $request
@@ -122,7 +144,7 @@ class UserController extends Controller
         ]);
 
         if ($isAdmin) {
-            $user->where('id_user', $request->id_user)->update($formFields);
+            $user->update($formFields);
         }
 
         return redirect('/users/manage')
@@ -177,7 +199,7 @@ class UserController extends Controller
             return abort(403);
         }
 
-        $user->where('id_user', $request->id_user)->delete();
+        $user->delete();
 
         return redirect('/users/manage')
             ->with('success', 'User berhasil dihapus!');

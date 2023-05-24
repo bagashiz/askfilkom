@@ -29,7 +29,7 @@ Route::middleware('guest')->group(function () {
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
-    Route::get('/users/{id_user}', [UserController::class, 'show']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
     Route::get('/profile/edit', [UserController::class, 'edit']);
     Route::patch('/profile/reset', [UserController::class, 'reset']);
     Route::post('/logout', [UserController::class, 'logout']);
@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/users/manage', [UserController::class, 'manage']);
-    Route::patch('/users/{id_user}', [UserController::class, 'update']);
-    Route::delete('/users/{id_user}', [UserController::class, 'destroy']);
+    Route::get('/users/{user}/edit', [UserController::class, 'editByAdmin']);
+    Route::patch('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });
