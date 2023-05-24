@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -83,5 +84,32 @@ class Pertanyaan extends Model
     public function vote(): HasMany
     {
         return $this->hasMany(Vote::class, 'id_pertanyaan');
+    }
+
+    /**
+     * scopeFilter defines filter that used in query
+     * 
+     * @param $query
+     * @return void
+     */
+    public function scopeFilter($query, array $filters)
+    {
+        if ($filters['topik'] ?? false) {
+            /**
+             * Sort by 
+             * 
+             */
+        }
+        if ($filters['search'] ?? false) {
+            $query->where('judul', 'like', '%' . request('search') . '%')
+                ->orWhere('deskripsi', 'like', '%' . request('search') . '%');
+        }
+        if ($filters['sortby'] ?? false) {
+            if ($filters['sortby'] == 'waktu') {
+                //$query->orderBy('created_at','desc');
+            } elseif ($filters['sortby'] == 'vote') {
+                //$query->orderBy('jumlah_vote','desc');
+            }
+        }
     }
 }
