@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('topik', function (Blueprint $table) {
             $table->id('id_topik');
             $table->string('nama');
-            $table->timestamps();
+            $table->datetimes();
         });
     }
 

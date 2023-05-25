@@ -13,10 +13,18 @@ return new class extends Migration
     {
         Schema::create('vote', function (Blueprint $table) {
             $table->id('id_vote');
-            $table->foreignId('id_user')->constrained('user', 'id_user');
-            $table->foreignId('id_pertanyaan')->nullable()->constrained('pertanyaan', 'id_pertanyaan');
-            $table->foreignId('id_jawaban')->nullable()->constrained('jawaban', 'id_jawaban');
-            $table->timestamps();
+            $table->foreignId('id_user')
+                ->constrained('user', 'id_user')
+                ->onDelete('cascade');
+            $table->foreignId('id_pertanyaan')
+                ->nullable()
+                ->constrained('pertanyaan', 'id_pertanyaan')
+                ->onDelete('cascade');
+            $table->foreignId('id_jawaban')
+                ->nullable()
+                ->constrained('jawaban', 'id_jawaban')
+                ->onDelete('cascade');
+            $table->datetimes();
         });
     }
 
