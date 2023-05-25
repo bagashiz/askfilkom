@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -88,28 +87,22 @@ class Pertanyaan extends Model
 
     /**
      * scopeFilter defines filter that used in query
-     * 
-     * @param $query
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $search
+     * @param array|null $topik
      * @return void
      */
-    public function scopeFilter($query, array $filters)
+    public function scopeFilter($query, ?string $search = null, ?array $topik = null): void
     {
-        if ($filters['topik'] ?? false) {
-            /**
-             * Sort by 
-             * 
-             */
+        if ($search ?? false) {
+            $query->where('judul', 'like', '%' . $search . '%')
+                ->orWhere('deskripsi', 'like', '%' . $search . '%');
         }
-        if ($filters['search'] ?? false) {
-            $query->where('judul', 'like', '%' . request('search') . '%')
-                ->orWhere('deskripsi', 'like', '%' . request('search') . '%');
-        }
-        if ($filters['sortby'] ?? false) {
-            if ($filters['sortby'] == 'waktu') {
-                //$query->orderBy('created_at','desc');
-            } elseif ($filters['sortby'] == 'vote') {
-                //$query->orderBy('jumlah_vote','desc');
-            }
+        if ($topik ?? false) {
+            $query->whereHas('topik', function ($query) use ($topik) {
+                $query->whereIn('id_topik', $topik);
+            });
         }
     }
 }

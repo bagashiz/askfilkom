@@ -10,7 +10,7 @@ class PertanyaanController extends Controller
 {
     /**
      * Index redirects to homepage with latest pertanyaan post
-     * 
+     *
      * @param Pertanyaan $pertanyaan
      * @return \Illuminate\Contracts\View\View
      */
@@ -22,6 +22,7 @@ class PertanyaanController extends Controller
                 'pertanyaan' => Pertanyaan::with('user', 'topik')
                     ->withCount('jawaban')
                     ->latest()
+                    ->filter(request(['search', 'topik']))
                     ->paginate(5)
             ]
         );
@@ -29,7 +30,7 @@ class PertanyaanController extends Controller
 
     /**
      * Create redirects to create Pertanyaan form
-     * 
+     *
      * @return \Illuminate\Contracts\View\View
      */
     public function create(): \Illuminate\Contracts\View\View
@@ -41,7 +42,7 @@ class PertanyaanController extends Controller
 
     /**
      *Store saves a new pertanyaan post to database
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -50,16 +51,17 @@ class PertanyaanController extends Controller
         $formFields = $request->validate([
             'judul' => ['required', 'max:60'],
             'deskripsi' => ['required', 'max:1000'],
-            'topik' => ['required', 'exists:topik,id_topik']
+            'topik' => ['required', 'array', 'exists:topik,id_topik']
         ]);
 
         $pertanyaan = new Pertanyaan();
         $pertanyaan->id_user = auth()->id();
         $pertanyaan->judul = $formFields['judul'];
         $pertanyaan->deskripsi = $formFields['deskripsi'];
-        $pertanyaan->topik()->attach($formFields['topik']);
 
         $pertanyaan->save();
+
+        $pertanyaan->topik()->attach($formFields['topik']);
 
         return redirect('/')
             ->with('success', 'Pertanyaan berhasil dibuat!');
@@ -67,7 +69,7 @@ class PertanyaanController extends Controller
 
     /**
      * Show displays a pertanyaan post
-     * 
+     *
      * @param Pertanyaan $pertanyaan
      * @return \Illuminate\Contracts\View\View
      */
@@ -81,7 +83,7 @@ class PertanyaanController extends Controller
 
     /**
      * Edit redirects to edit pertanyaan form
-     * 
+     *
      * @param Pertanyaan $pertanyaan
      * @return \Illuminate\Contracts\View\View
      */
@@ -99,10 +101,10 @@ class PertanyaanController extends Controller
 
     /**
      * Update updates user's pertanyaan
-     * 
+     *
      * @param Request $request
      * @param Pertanyaan $pertanyaan
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Pertanyaan $pertanyaan): \Illuminate\Http\RedirectResponse
@@ -114,14 +116,15 @@ class PertanyaanController extends Controller
         $formFields = $request->validate([
             'judul' => ['required', 'max:60'],
             'deskripsi' => ['required', 'max:1000'],
-            'topik' => ['required', 'exists:topik,id_topik']
+            'topik' => ['required', 'array', 'exists:topik,id_topik']
         ]);
 
         $pertanyaan->judul = $formFields['judul'];
         $pertanyaan->deskripsi = $formFields['deskripsi'];
-        $pertanyaan->topik()->sync([$formFields['topik']]);
 
         $pertanyaan->save();
+
+        $pertanyaan->topik()->sync($formFields['topik']);
 
         return back()
             ->with('success', 'Pertanyaan berhasil diperbarui!');
@@ -129,19 +132,22 @@ class PertanyaanController extends Controller
 
     /**
      * Destroy deletes pertanyaan post
-     * 
+     *
      * @param Pertanyaan $pertanyaan
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Pertanyaan $pertanyaan): \Illuminate\Http\RedirectResponse
     {
-        if ($pertanyaan->id_user !== auth()->id() || !auth()->user()->is_admin) {
+        $user = auth()->user();
+
+        if ($pertanyaan->id_user !== $user->id_user && !$user->is_admin) {
             abort(403);
         }
 
+        $pertanyaan->topik()->detach();
         $pertanyaan->delete();
 
         return redirect('/')
-            ->with('Pertanyaan berhasil dihapus!');
+            ->with('success', 'Pertanyaan berhasil dihapus!');
     }
 }
