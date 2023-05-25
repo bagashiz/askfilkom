@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\UserController;
-use App\Models\Pertanyaan;
+use App\Http\Controllers\PertanyaanController;
+use App\Http\Controllers\JawabanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +15,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Guest Routes
 Route::middleware('guest')->group(function () {
@@ -43,6 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/pertanyaan/{pertanyaan}/edit', [PertanyaanController::class, 'edit']);
     Route::patch('/pertanyaan/{pertanyaan}', [PertanyaanController::class, 'update']);
     Route::delete('/pertanyaan/{pertanyaan}', [PertanyaanController::class, 'destroy']);
+
+    // Jawaban Routes
+    Route::get('/jawaban/create/{pertanyaan}', [JawabanController::class, 'create']);
+    Route::post('/jawaban', [JawabanController::class, 'store']);
+    Route::get('/jawaban/{jawaban}/edit', [JawabanController::class, 'edit']);
+    Route::patch('/jawaban/{jawaban}', [JawabanController::class, 'update']);
+    Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy']);
 });
 
 // Admin Routes
@@ -55,3 +58,4 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Without Middleware Routes
 Route::get('/', [PertanyaanController::class, 'index']);
+Route::get('/pertanyaan/{pertanyaan}', [PertanyaanController::class, 'show']);
