@@ -84,4 +84,25 @@ class Pertanyaan extends Model
     {
         return $this->hasMany(Vote::class, 'id_pertanyaan');
     }
+
+    /**
+     * scopeFilter defines filter that used in query
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $search
+     * @param array|null $topik
+     * @return void
+     */
+    public function scopeFilter($query, ?string $search = null, ?array $topik = null): void
+    {
+        if ($search ?? false) {
+            $query->where('judul', 'like', '%' . $search . '%')
+                ->orWhere('deskripsi', 'like', '%' . $search . '%');
+        }
+        if ($topik ?? false) {
+            $query->whereHas('topik', function ($query) use ($topik) {
+                $query->whereIn('id_topik', $topik);
+            });
+        }
+    }
 }
