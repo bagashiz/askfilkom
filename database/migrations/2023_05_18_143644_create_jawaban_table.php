@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('jawaban', function (Blueprint $table) {
             $table->id('id_jawaban');
-            $table->foreignId('id_pertanyaan')->constrained('pertanyaan', 'id_pertanyaan');
-            $table->foreignId('id_user')->constrained('user', 'id_user');
+            $table->foreignId('id_pertanyaan')
+                ->constrained('pertanyaan', 'id_pertanyaan')
+                ->onDelete('cascade');
+            $table->foreignId('id_user')
+                ->constrained('user', 'id_user')
+                ->onDelete('cascade');
             $table->text('deskripsi');
-            $table->integer('jumlah_vote')->default(0);
-            $table->timestamps();
+            $table->integer('jumlah_vote')
+                ->default(0);
+            $table->datetimes();
         });
     }
 

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('nama');
             $table->boolean('is_admin')->default(false);
-            $table->timestamp('email_verified_at')->nullable();
-            $table->timestamps();
+            $table->dateTime('email_verified_at')->nullable();
+            $table->datetimes();
         });
     }
 
