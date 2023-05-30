@@ -3,6 +3,8 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\JawabanController;
+use App\Http\Controllers\TopikController;
+use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,14 +48,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/jawaban/{jawaban}/edit', [JawabanController::class, 'edit']);
     Route::patch('/jawaban/{jawaban}', [JawabanController::class, 'update']);
     Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy']);
+
+    //Vote Routes
+    Route::post('vote/{pertanyaan}/vote', [VoteController::class, 'votePertanyaan']);
+    Route::post('vote/{jawaban}/vote', [VoteController::class, 'voteJawaban']);
+    Route::post('vote/{pertanyaan}/unvote', [VoteController::class, 'unvotePertanyaan']);
+    Route::post('vote/{jawaban}/unvote', [VoteController::class, 'unvoteJawaban']);
 });
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->group(function () {
+    // User Routes
     Route::get('/users/manage', [UserController::class, 'manage']);
     Route::get('/users/{user}/edit', [UserController::class, 'editByAdmin']);
     Route::patch('/users/{user}', [UserController::class, 'update']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+    // Topik Routes
+    Route::get('/topik', [TopikController::class, 'index']);
+    Route::get('/topik/create', [TopikController::class, 'create']);
+    Route::post('/topik', [TopikController::class, 'store']);
+    Route::get('/topik/{topik}/edit', [TopikController::class, 'edit']);
+    Route::patch('/topik/{topik}', [TopikController::class, 'update']);
+    Route::delete('/topik/{topik}', [TopikController::class, 'destroy']);
 });
 
 // Without Middleware Routes
