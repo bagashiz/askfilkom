@@ -22,6 +22,7 @@ class JawabanTest extends TestCase
         $this->assertSame([
             'id_user',
             'deskripsi',
+            'jumlah_vote',
         ], $jawaban->getFillable());
 
         $this->assertSame([

@@ -33,6 +33,7 @@ class Jawaban extends Model
     protected $fillable = [
         'id_user',
         'deskripsi',
+        'jumlah_vote',
     ];
 
     /**

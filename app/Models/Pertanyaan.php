@@ -34,6 +34,7 @@ class Pertanyaan extends Model
     protected $fillable = [
         'judul',
         'deskripsi',
+        'jumlah_vote',
     ];
 
     /**
