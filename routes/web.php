@@ -50,10 +50,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy']);
 
     //Vote Routes
-    Route::post('vote/{pertanyaan}/vote', [VoteController::class, 'votePertanyaan']);
-    Route::post('vote/{jawaban}/vote', [VoteController::class, 'voteJawaban']);
-    Route::post('vote/{pertanyaan}/unvote', [VoteController::class, 'unvotePertanyaan']);
-    Route::post('vote/{jawaban}/unvote', [VoteController::class, 'unvoteJawaban']);
+    Route::post('pertanyaan/{pertanyaan}/vote', [VoteController::class, 'votePertanyaan']);
+    Route::post('jawaban/{jawaban}/vote', [VoteController::class, 'voteJawaban']);
+    Route::delete('pertanyaan/{pertanyaan}/unvote', [VoteController::class, 'unvotePertanyaan']);
+    Route::delete('jawaban/{jawaban}/unvote', [VoteController::class, 'unvoteJawaban']);
 });
 
 // Admin Routes

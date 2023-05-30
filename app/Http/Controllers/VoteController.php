@@ -5,32 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Vote;
 use App\Models\Jawaban;
 use App\Models\Pertanyaan;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 
 class VoteController extends Controller
 {
     /**
      * votePertanyaan saves a new state of vote in pertanyaan post by a user
-     * 
-     * @param Request $request
-     * @param Response $response
+     *
      * @param Pertanyaan $pertanyaan
-     * 
-     * @return Response
+     * @return JsonResponse
      */
-    public function votePertanyaan(Request $request, Response $response, Pertanyaan $pertanyaan): Response
+    public function votePertanyaan(Pertanyaan $pertanyaan): JsonResponse
     {
-        $request->validate([
-            'pertanyaan' => [
-                'required',
-                Rule::exists('pertanyaan')->where(function ($query) use ($pertanyaan) {
-                    $query->where('id_pertanyaan', $pertanyaan->id_pertanyaan);
-                }),
-            ],
-        ]);
-
         $vote = new Vote();
         $vote->id_user = auth()->id();
         $vote->id_pertanyaan = $pertanyaan->id_pertanyaan;
@@ -39,9 +26,9 @@ class VoteController extends Controller
 
         $pertanyaan->jumlah_vote += 1;
 
-        $pertanyaan->save();
+        $pertanyaan->update();
 
-        return $response->json([
+        return response()->json([
             'message' => 'Vote berhasil!',
             'jumlah_vote' => $pertanyaan->jumlah_vote,
         ]);
@@ -49,24 +36,12 @@ class VoteController extends Controller
 
     /**
      * voteJawaban saves a new state of vote in jawaban post by a user
-     * 
-     * @param Request $request
-     * @param Response $response
+     *
      * @param Jawaban $jawaban
-     * 
-     * @return Response
+     * @return JsonResponse
      */
-    public function storeJawaban(Request $request, Response $response, Jawaban $jawaban): Response
+    public function voteJawaban(Jawaban $jawaban): JsonResponse
     {
-        $request->validate([
-            'jawaban' => [
-                'required',
-                Rule::exists('jawaban')->where(function ($query) use ($jawaban) {
-                    $query->where('id_jawaban', $jawaban->id_jawaban);
-                }),
-            ],
-        ]);
-
         $vote = new Vote();
         $vote->id_user = auth()->id();
         $vote->id_jawaban = $jawaban->id_jawaban;
@@ -75,9 +50,9 @@ class VoteController extends Controller
 
         $jawaban->jumlah_vote += 1;
 
-        $jawaban->save();
+        $jawaban->update();
 
-        return $response()->json([
+        return response()->json([
             'message' => 'Vote berhasil!',
             'jumlah_vote' => $jawaban->jumlah_vote,
         ]);
@@ -85,37 +60,31 @@ class VoteController extends Controller
 
     /**
      * unvotePertanyaan remove a state of vote in pertanyaan post by a user
-     * 
-     * @param Request $request
-     * @param Response $response
+     *
      * @param Pertanyaan $pertanyaan
-     * 
-     * @return Response
+     * @return JsonResponse
      */
-    public function unvotePertanyaan(Request $request, Response $response, Pertanyaan $pertanyaan): Response
+    public function unvotePertanyaan(Pertanyaan $pertanyaan): JsonResponse
     {
-        $request->validate([
-            'pertanyaan' => [
-                'required',
-                Rule::exists('pertanyaan')->where(function ($query) use ($pertanyaan) {
-                    $query->where('id_pertanyaan', $pertanyaan->id_pertanyaan);
-                }),
-            ],
-        ]);
-
         $user = auth()->user();
 
-        $vote = Vote::where('id_user', $user->id_user)
-            ->where('id_pertanyaan', $pertanyaan->id_pertanyaan)
-            ->firstOrFail();
+        try {
+            $vote = Vote::where('id_user', $user->id_user)
+                ->where('id_pertanyaan', $pertanyaan->id_pertanyaan)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Unvote gagal!',
+            ], 404);
+        }
 
         $vote->delete();
 
         $pertanyaan->jumlah_vote -= 1;
 
-        $pertanyaan->save();
+        $pertanyaan->update();
 
-        return $response()->json([
+        return response()->json([
             'message' => 'Unvote berhasil!',
             'jumlah_vote' => $pertanyaan->jumlah_vote,
         ]);
@@ -123,37 +92,31 @@ class VoteController extends Controller
 
     /**
      * unvoteJawaban remove a state of vote in jawaban post by a user
-     * 
-     * @param Request $request
-     * @param Response $response
+     *
      * @param Jawaban $jawaban
-     * 
-     * @return Response
+     * @return JsonResponse
      */
-    public function unvotejawaban(Request $request, Response $response, Jawaban $jawaban): Response
+    public function unvoteJawaban(Jawaban $jawaban): JsonResponse
     {
-        $request->validate([
-            'jawaban' => [
-                'required',
-                Rule::exists('jawaban')->where(function ($query) use ($jawaban) {
-                    $query->where('id_jawaban', $jawaban->id_jawaban);
-                }),
-            ],
-        ]);
-
         $user = auth()->user();
 
-        $vote = Vote::where('id_user', $user->id_user)
-            ->where('id_jawaban', $jawaban->id_jawaban)
-            ->firstOrFail();
+        try {
+            $vote = Vote::where('id_user', $user->id_user)
+                ->where('id_jawaban', $jawaban->id_jawaban)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Unvote gagal!',
+            ], 404);
+        }
 
         $vote->delete();
 
         $jawaban->jumlah_vote -= 1;
 
-        $jawaban->save();
+        $jawaban->update();
 
-        return $response()->json([
+        return response()->json([
             'message' => 'Unvote berhasil!',
             'jumlah_vote' => $jawaban->jumlah_vote,
         ]);
