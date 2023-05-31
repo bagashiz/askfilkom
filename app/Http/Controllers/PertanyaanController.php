@@ -22,7 +22,7 @@ class PertanyaanController extends Controller
                 'pertanyaan' => Pertanyaan::with('user', 'topik')
                     ->withCount('jawaban')
                     ->latest()
-                    ->filter(request(['search', 'topik']))
+                    ->filter(request()->input('search'), request()->input('topik'))
                     ->paginate(5)
             ]
         );
