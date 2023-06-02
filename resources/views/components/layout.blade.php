@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>AskFilkom</title>
     <!-- Load Vite Tailwind CSS -->
     @vite(['resources/css/app.css','resources/js/app.js'])
     <!-- Flowbite -->
@@ -43,16 +43,17 @@
                     </div>
                     <ul class="py-2" aria-labelledby="user-menu-button">
                         <li>
-                            <a href="#"
+                            <a href="/profile"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                 My Profile
                             </a>
                         </li>
                         <li>
-                            <a href="#"
+                            <form action="/logout" method="POST"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:text-white dark:hover:bg-red-500 dark:text-gray-200 dark:hover:text-white">
-                                Logout
-                            </a>
+                                @csrf
+                                <button type="submit">Logout</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -76,7 +77,7 @@
 
     <!-- Footer -->
     <footer
-        class="sticky bottom-0 left-0 right-0 bg-white rounded-lg shadow sm:flex sm:items-center sm:justify-between p-2 sm:p-4 xl:p-6 dark:bg-gray-800">
+        class="fixed bottom-0 left-0 right-0 bg-white rounded-lg shadow sm:flex sm:items-center sm:justify-between p-2 sm:p-4 xl:p-6 dark:bg-gray-800">
         <!-- Soure code link -->
         <a href="https://www.gitlab.com/bagashiz/askfilkom" target="_blank" rel="noopener noreferrer">
             <i class="fa-brands fa-gitlab text-xl ml-2 text-gray-500 dark:text-gray-400 hover:text-primary-600"></i>
@@ -88,7 +89,9 @@
         </p>
         <!-- Pertanyaan form button -->
         <div class="flex justify-center items-center space-x-1">
-            <button class="py-1 px-2 text-white bg-primary-600 rounded hover:bg-primary-700">Ask Now!</button>
+            <a href="/pertanyaan/create">
+                <button class="py-2 px-6 text-white bg-primary-600 rounded-lg hover:bg-primary-700">Ask Now!</button>
+            </a>
         </div>
     </footer>
 </body>
