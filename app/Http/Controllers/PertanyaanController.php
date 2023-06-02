@@ -51,7 +51,7 @@ class PertanyaanController extends Controller
         $formFields = $request->validate([
             'judul' => ['required', 'max:60'],
             'deskripsi' => ['required', 'max:1000'],
-            'topik' => ['required', 'array', 'exists:topik,id_topik']
+            'topik' => ['required', 'exists:topik,id_topik']
         ]);
 
         $pertanyaan = new Pertanyaan();
@@ -61,7 +61,7 @@ class PertanyaanController extends Controller
 
         $pertanyaan->save();
 
-        $pertanyaan->topik()->attach($formFields['topik']);
+        $pertanyaan->topik()->attach([$formFields['topik']]);
 
         return redirect('/')
             ->with('success', 'Pertanyaan berhasil dibuat!');

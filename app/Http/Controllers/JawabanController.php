@@ -30,12 +30,14 @@ class JawabanController extends Controller
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $formFields = $request->validate([
+            'id_user' => ['required',  'exists:user,id_user'],
+            'id_pertanyaan' => ['required', 'exists:pertanyaan,id_pertanyaan'],
             'deskripsi' => ['required', 'max:1000']
         ]);
 
         $jawaban = new Jawaban();
-        $jawaban->id_user = auth()->id();
-        $jawaban->id_pertanyaan = $request->id_pertanyaan;
+        $jawaban->id_user = $formFields['id_user'];
+        $jawaban->id_pertanyaan = $formFields['id_pertanyaan'];
         $jawaban->deskripsi = $formFields['deskripsi'];
 
         $jawaban->save();
