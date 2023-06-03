@@ -91,10 +91,11 @@ class Pertanyaan extends Model
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string|null $search
-     * @param array|null $topik
+     * @param string|null $topik
+     * @param string|null $sort
      * @return void
      */
-    public function scopeFilter($query, ?string $search = null, ?array $topik = null): void
+    public function scopeFilter($query, ?string $search = null, ?string $topik = null, ?string $sort = null): void
     {
         if ($search ?? false) {
             $query->where('judul', 'like', '%' . $search . '%')
@@ -102,8 +103,16 @@ class Pertanyaan extends Model
         }
         if ($topik ?? false) {
             $query->whereHas('topik', function ($query) use ($topik) {
-                $query->whereIn('id_topik', $topik);
+                $query->where('nama', $topik);
             });
+        }
+
+        if ($sort ?? false) {
+            if ($sort === 'votes') {
+                $query->orderBy('jumlah_vote', 'desc');
+            } else if ($sort === 'latest') {
+                $query->latest();
+            }
         }
     }
 }
