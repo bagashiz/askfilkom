@@ -9,19 +9,6 @@ use Illuminate\Http\Request;
 class JawabanController extends Controller
 {
     /**
-     * Create redirects to create jawaban form
-     *
-     * @param Pertanyaan $pertanyaan
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function create(Pertanyaan $pertanyaan): \Illuminate\Contracts\View\View
-    {
-        return view('jawaban.create', [
-            'pertanyaan' => $pertanyaan
-        ]);
-    }
-
-    /**
      * Store saves a new jawaban post to database
      *
      * @param Request $request
@@ -44,24 +31,6 @@ class JawabanController extends Controller
 
         return redirect('/pertanyaan/' . $jawaban->pertanyaan->id_pertanyaan)
             ->with('success', 'Jawaban berhasil ditambahkan!');
-    }
-
-    /**
-     * Edit redirects to edit jawaban form
-     *
-     * @param Jawaban $jawaban
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit(Jawaban $jawaban): \Illuminate\Contracts\View\View
-    {
-        if ($jawaban->id_user !== auth()->id()) {
-            abort(403);
-        }
-
-        return view('jawaban.edit', [
-            'pertanyaan' => $jawaban->pertanyaan(),
-            'jawaban' => $jawaban,
-        ]);
     }
 
     /**

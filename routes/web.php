@@ -43,9 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pertanyaan/{pertanyaan}', [PertanyaanController::class, 'destroy']);
 
     // Jawaban Routes
-    Route::get('/jawaban/create/{pertanyaan}', [JawabanController::class, 'create']);
     Route::post('/jawaban', [JawabanController::class, 'store']);
-    Route::get('/jawaban/{jawaban}/edit', [JawabanController::class, 'edit']);
     Route::patch('/jawaban/{jawaban}', [JawabanController::class, 'update']);
     Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy']);
 
