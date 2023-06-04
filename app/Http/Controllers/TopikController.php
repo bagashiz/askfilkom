@@ -15,18 +15,9 @@ class TopikController extends Controller
     public function index(): \Illuminate\Contracts\View\View
     {
         return view('topik.index', [
-            'topik' => Topik::all()
+            'topik' => Topik::orderBy('nama', 'asc')
+                ->paginate(10)
         ]);
-    }
-
-    /**
-     * Create redirects to create topik form
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function create(): \Illuminate\Contracts\View\View
-    {
-        return view('topik.create');
     }
 
     /**
@@ -47,19 +38,6 @@ class TopikController extends Controller
 
         return redirect('/topik')
             ->with('success', 'Topik berhasil dibuat!');
-    }
-
-    /**
-     * Edit redirects to edit topik form
-     *
-     * @param Topik $topik
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit(Topik $topik): \Illuminate\Contracts\View\View
-    {
-        return view('topik.edit', [
-            'topik' => $topik
-        ]);
     }
 
     /**
