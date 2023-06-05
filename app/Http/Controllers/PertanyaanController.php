@@ -36,7 +36,7 @@ class PertanyaanController extends Controller
     public function create(): \Illuminate\Contracts\View\View
     {
         return view('pertanyaan.create', [
-            'topik' => Topik::all()
+            'topik' => Topik::orderBy('nama')->get(),
         ]);
     }
 
