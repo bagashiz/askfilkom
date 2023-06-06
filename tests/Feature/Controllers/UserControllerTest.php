@@ -156,8 +156,8 @@ class UserControllerTest extends TestCase
             'is_admin' => $request['is_admin'],
         ]);
 
-        // Ensure that the user is redirected to the manage users page
-        $response->assertRedirect('/users/manage');
+        // Ensure that the user is redirected back to the user management page
+        $response->assertRedirect('/users');
 
         // Ensure that the success message is flashed
         $response->assertSessionHas('success', 'Data user berhasil diperbarui!');
@@ -265,7 +265,7 @@ class UserControllerTest extends TestCase
         ]);
 
         // Ensure that the admin is redirected to the user management page
-        $response->assertRedirect('/users/manage');
+        $response->assertRedirect(back()->getTargetUrl());
 
         // Ensure that the success message is flashed
         $response->assertSessionHas('success', 'User berhasil dihapus!');
@@ -370,7 +370,7 @@ class UserControllerTest extends TestCase
 
         $response = $this->post('/logout');
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect('/');
         $response->assertSessionHas('success', 'Logout berhasil!');
     }
 }

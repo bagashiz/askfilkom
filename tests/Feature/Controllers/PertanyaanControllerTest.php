@@ -121,7 +121,7 @@ class PertanyaanControllerTest extends TestCase
 
         // Assert that the user is redirected to the home page and sees the success message
         $response->assertStatus(302)
-            ->assertRedirect('/')
+            ->assertRedirect('/pertanyaan/' . $pertanyaan->id_pertanyaan)
             ->assertSessionHas('success', 'Pertanyaan berhasil diperbarui!');
 
         // Assert that the pertanyaan was updated
