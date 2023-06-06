@@ -87,6 +87,23 @@ class Pertanyaan extends Model
     }
 
     /**
+     * hasVotedByUser checks if a user has voted a pertanyaan post
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function hasVotedByUser($user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        return $this->vote()
+            ->where('id_user', $user->id_user)
+            ->exists();
+    }
+
+    /**
      * scopeFilter defines filter that used in query
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
