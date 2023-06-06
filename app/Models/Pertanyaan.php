@@ -127,7 +127,7 @@ class Pertanyaan extends Model
         if ($sort ?? false) {
             if ($sort === 'votes') {
                 $query->orderBy('jumlah_vote', 'desc');
-            } else if ($sort === 'latest') {
+            } elseif ($sort === 'latest') {
                 $query->latest();
             }
         }
