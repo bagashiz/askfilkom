@@ -95,7 +95,7 @@ class PertanyaanController extends Controller
 
         return view('pertanyaan.edit', [
             'pertanyaan' => $pertanyaan->load('topik'),
-            'topik' => Topik::all()
+            'topik' => Topik::orderBy('nama')->get(),
         ]);
     }
 
@@ -122,11 +122,11 @@ class PertanyaanController extends Controller
         $pertanyaan->judul = $formFields['judul'];
         $pertanyaan->deskripsi = $formFields['deskripsi'];
 
-        $pertanyaan->save();
+        $pertanyaan->update();
 
         $pertanyaan->topik()->sync($formFields['topik']);
 
-        return back()
+        return redirect('/pertanyaan/' . $pertanyaan->id_pertanyaan)
             ->with('success', 'Pertanyaan berhasil diperbarui!');
     }
 

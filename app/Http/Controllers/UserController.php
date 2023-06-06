@@ -53,7 +53,9 @@ class UserController extends Controller
             'users.show',
             [
                 'user' => $user,
-                'pertanyaan' => $user->pertanyaan()->latest()->paginate(5),
+                'pertanyaan' => $user->pertanyaan()
+                    ->latest()
+                    ->paginate(5),
             ]
         );
     }
@@ -71,30 +73,25 @@ class UserController extends Controller
             'users.profile',
             [
                 'user' => $user,
-                'pertanyaan' => $user->pertanyaan()->latest()->paginate(5),
+                'pertanyaan' => $user->pertanyaan()->latest()
             ]
         );
     }
 
 
     /**
-     * Manage redirects to the user management page.
+     * Index redirects to the user management page by admin.
      *
-     * @param User $user
      * @return \Illuminate\Contracts\View\View
      */
-    public function manage(User $user): \Illuminate\Contracts\View\View
+    public function index(): \Illuminate\Contracts\View\View
     {
-        $isAdmin = auth()->user()->is_admin;
-
-        if (!$isAdmin) {
-            return abort(403);
-        }
-
         return view(
-            'users.manage',
+            'users.index',
             [
-                'users' => $user->all(),
+                'users' => User::orderBy('is_admin', 'desc')
+                ->orderBy('username', 'asc')
+                ->paginate(10),
             ]
         );
     }
@@ -107,12 +104,6 @@ class UserController extends Controller
      */
     public function editByAdmin(User $user): \Illuminate\Contracts\View\View
     {
-        $isAdmin = auth()->user()->is_admin;
-
-        if (!$isAdmin) {
-            return abort(403);
-        }
-
         return view(
             'users.edit',
             [
@@ -130,12 +121,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): \Illuminate\Http\RedirectResponse
     {
-        $isAdmin = auth()->user()->is_admin;
-
-        if (!$isAdmin) {
-            return abort(403);
-        }
-
+        // dd($request->input('is_admin'));
         $formFields = $request->validate([
             'username' => ['required', 'min:5', 'max:20'],
             'nama' => ['required', 'min:5', 'max:50'],
@@ -143,11 +129,9 @@ class UserController extends Controller
             'is_admin' => ['required', 'boolean'],
         ]);
 
-        if ($isAdmin) {
-            $user->update($formFields);
-        }
+        $user->update($formFields);
 
-        return redirect('/users/manage')
+        return redirect('/users')
             ->with('success', 'Data user berhasil diperbarui!');
     }
 
@@ -187,21 +171,14 @@ class UserController extends Controller
     /**
      * Destroy deletes user by admin or authenticated user.
      *
-     * @param Request $request
      * @param User $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, User $user): \Illuminate\Http\RedirectResponse
+    public function destroy(User $user): \Illuminate\Http\RedirectResponse
     {
-        $isAdmin = auth()->user()->is_admin;
-
-        if (!$isAdmin) {
-            return abort(403);
-        }
-
         $user->delete();
 
-        return redirect('/users/manage')
+        return back()
             ->with('success', 'User berhasil dihapus!');
     }
 
@@ -231,8 +208,7 @@ class UserController extends Controller
         if (auth()->attempt($formFields)) {
             $request->session()->regenerate();
 
-            return redirect()
-                ->intended('/')
+            return back()
                 ->with('success', 'Login berhasil!');
         }
 
@@ -254,7 +230,7 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')
+        return redirect('/')
             ->with('success', 'Logout berhasil!');
     }
 }

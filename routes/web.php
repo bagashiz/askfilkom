@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'admin'])->group(function () {
     // User Routes
-    Route::get('/users/manage', [UserController::class, 'manage']);
+    Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{user}/edit', [UserController::class, 'editByAdmin']);
     Route::patch('/users/{user}', [UserController::class, 'update']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
