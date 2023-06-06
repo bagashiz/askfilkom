@@ -31,7 +31,8 @@ class JawabanControllerTest extends TestCase
 
         // Create form data for jawaban
         $formData = [
-            'id_pertanyaan' => $pertanyaan->id_pertanyaan,
+            'id_pertanyaan' => $pertanyaan->id_pertanyaan, // This field is not visible in the form, but it is required in the controller
+            'id_user' => $user->id_user, // This field is not visible in the form, but it is required in the controller
             'deskripsi' => $this->faker->text(1000),
         ];
 

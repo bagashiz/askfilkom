@@ -10,6 +10,7 @@ use Tests\TestCase;
 class VoteControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
     /**
      * test_vote_pertanyaan_by_user tests vote pertanyaan by authenticated user
      *
@@ -28,15 +29,12 @@ class VoteControllerTest extends TestCase
             'jumlah_vote' => 2,
         ]);
 
-        // Send request
-        $response = $this->postJson('/pertanyaan/' . $pertanyaan->id_pertanyaan . '/vote');
+        // Send vote request
+        $response = $this->post('/pertanyaan/' . $pertanyaan->id_pertanyaan . '/vote');
 
         // Assert it was successful
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Vote berhasil!',
-                'jumlah_vote' => 3,
-            ]);
+        $response->assertRedirect()
+            ->assertSessionHas('success', 'Vote berhasil!');
 
         // Assert database has expected changes
         $this->assertDatabaseHas('vote', [
@@ -75,15 +73,12 @@ class VoteControllerTest extends TestCase
             'jumlah_vote' => 2,
         ]);
 
-        // Send request
-        $response = $this->postJson('/jawaban/' . $jawaban->id_jawaban . '/vote');
+        // Send vote request
+        $response = $this->post('/jawaban/' . $jawaban->id_jawaban . '/vote');
 
         // Assert it was successful
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Vote berhasil!',
-                'jumlah_vote' => 3,
-            ]);
+        $response->assertRedirect()
+            ->assertSessionHas('success', 'Vote berhasil!');
 
         // Assert database has expected changes
         $this->assertDatabaseHas('vote', [
@@ -122,15 +117,12 @@ class VoteControllerTest extends TestCase
             'id_pertanyaan' => $pertanyaan->id_pertanyaan,
         ]);
 
-        // Send request
-        $response = $this->deleteJson('/pertanyaan/' . $pertanyaan->id_pertanyaan . '/unvote');
+        // Send unvote request
+        $response = $this->delete('/pertanyaan/' . $pertanyaan->id_pertanyaan . '/unvote');
 
         // Assert it was successful
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Unvote berhasil!',
-                'jumlah_vote' => 1,
-            ]);
+        $response->assertRedirect()
+            ->assertSessionHas('success', 'Unvote berhasil!');
 
         // Assert database has expected changes
         $this->assertDatabaseMissing('vote', [
@@ -175,15 +167,12 @@ class VoteControllerTest extends TestCase
             'id_jawaban' => $jawaban->id_jawaban,
         ]);
 
-        // Send request
-        $response = $this->deleteJson('/jawaban/' . $jawaban->id_jawaban . '/unvote');
+        // Send unvote request
+        $response = $this->delete('/jawaban/' . $jawaban->id_jawaban . '/unvote');
 
         // Assert it was successful
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Unvote berhasil!',
-                'jumlah_vote' => 1,
-            ]);
+        $response->assertRedirect()
+            ->assertSessionHas('success', 'Unvote berhasil!');
 
         // Assert database has expected changes
         $this->assertDatabaseMissing('vote', [

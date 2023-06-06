@@ -43,9 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pertanyaan/{pertanyaan}', [PertanyaanController::class, 'destroy']);
 
     // Jawaban Routes
-    Route::get('/jawaban/create/{pertanyaan}', [JawabanController::class, 'create']);
     Route::post('/jawaban', [JawabanController::class, 'store']);
-    Route::get('/jawaban/{jawaban}/edit', [JawabanController::class, 'edit']);
     Route::patch('/jawaban/{jawaban}', [JawabanController::class, 'update']);
     Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy']);
 
@@ -59,7 +57,7 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'admin'])->group(function () {
     // User Routes
-    Route::get('/users/manage', [UserController::class, 'manage']);
+    Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{user}/edit', [UserController::class, 'editByAdmin']);
     Route::patch('/users/{user}', [UserController::class, 'update']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);

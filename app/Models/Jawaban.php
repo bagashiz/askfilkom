@@ -74,4 +74,21 @@ class Jawaban extends Model
     {
         return $this->hasMany(Vote::class, 'id_jawaban');
     }
+
+    /**
+     * Check if the jawaban has been voted by the given user.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function hasVotedByUser($user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        return $this->vote()
+            ->where('id_user', $user->id_user)
+            ->exists();
+    }
 }

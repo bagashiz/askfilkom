@@ -9,19 +9,6 @@ use Illuminate\Http\Request;
 class JawabanController extends Controller
 {
     /**
-     * Create redirects to create jawaban form
-     *
-     * @param Pertanyaan $pertanyaan
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function create(Pertanyaan $pertanyaan): \Illuminate\Contracts\View\View
-    {
-        return view('jawaban.create', [
-            'pertanyaan' => $pertanyaan
-        ]);
-    }
-
-    /**
      * Store saves a new jawaban post to database
      *
      * @param Request $request
@@ -30,36 +17,20 @@ class JawabanController extends Controller
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $formFields = $request->validate([
+            'id_user' => ['required',  'exists:user,id_user'],
+            'id_pertanyaan' => ['required', 'exists:pertanyaan,id_pertanyaan'],
             'deskripsi' => ['required', 'max:1000']
         ]);
 
         $jawaban = new Jawaban();
-        $jawaban->id_user = auth()->id();
-        $jawaban->id_pertanyaan = $request->id_pertanyaan;
+        $jawaban->id_user = $formFields['id_user'];
+        $jawaban->id_pertanyaan = $formFields['id_pertanyaan'];
         $jawaban->deskripsi = $formFields['deskripsi'];
 
         $jawaban->save();
 
         return redirect('/pertanyaan/' . $jawaban->pertanyaan->id_pertanyaan)
             ->with('success', 'Jawaban berhasil ditambahkan!');
-    }
-
-    /**
-     * Edit redirects to edit jawaban form
-     *
-     * @param Jawaban $jawaban
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit(Jawaban $jawaban): \Illuminate\Contracts\View\View
-    {
-        if ($jawaban->id_user !== auth()->id()) {
-            abort(403);
-        }
-
-        return view('jawaban.edit', [
-            'pertanyaan' => $jawaban->pertanyaan(),
-            'jawaban' => $jawaban,
-        ]);
     }
 
     /**

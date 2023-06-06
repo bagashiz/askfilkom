@@ -87,14 +87,32 @@ class Pertanyaan extends Model
     }
 
     /**
+     * hasVotedByUser checks if a user has voted a pertanyaan post
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function hasVotedByUser($user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        return $this->vote()
+            ->where('id_user', $user->id_user)
+            ->exists();
+    }
+
+    /**
      * scopeFilter defines filter that used in query
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string|null $search
-     * @param array|null $topik
+     * @param string|null $topik
+     * @param string|null $sort
      * @return void
      */
-    public function scopeFilter($query, ?string $search = null, ?array $topik = null): void
+    public function scopeFilter($query, ?string $search = null, ?string $topik = null, ?string $sort = null): void
     {
         if ($search ?? false) {
             $query->where('judul', 'like', '%' . $search . '%')
@@ -102,8 +120,16 @@ class Pertanyaan extends Model
         }
         if ($topik ?? false) {
             $query->whereHas('topik', function ($query) use ($topik) {
-                $query->whereIn('id_topik', $topik);
+                $query->where('nama', $topik);
             });
+        }
+
+        if ($sort ?? false) {
+            if ($sort === 'votes') {
+                $query->orderBy('jumlah_vote', 'desc');
+            } else if ($sort === 'latest') {
+                $query->latest();
+            }
         }
     }
 }

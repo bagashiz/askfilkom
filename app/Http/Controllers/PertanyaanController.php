@@ -21,9 +21,9 @@ class PertanyaanController extends Controller
             [
                 'pertanyaan' => Pertanyaan::with('user', 'topik')
                     ->withCount('jawaban')
+                    ->filter(request()->input('search'), request()->input('topik'), request()->input('sort'))
                     ->latest()
-                    ->filter(request()->input('search'), request()->input('topik'))
-                    ->paginate(5)
+                    ->paginate(10)
             ]
         );
     }
@@ -36,7 +36,7 @@ class PertanyaanController extends Controller
     public function create(): \Illuminate\Contracts\View\View
     {
         return view('pertanyaan.create', [
-            'topik' => Topik::all()
+            'topik' => Topik::orderBy('nama')->get(),
         ]);
     }
 
@@ -51,7 +51,7 @@ class PertanyaanController extends Controller
         $formFields = $request->validate([
             'judul' => ['required', 'max:60'],
             'deskripsi' => ['required', 'max:1000'],
-            'topik' => ['required', 'array', 'exists:topik,id_topik']
+            'topik' => ['required', 'array', 'min:1', 'max:3', 'exists:topik,id_topik']
         ]);
 
         $pertanyaan = new Pertanyaan();
@@ -95,7 +95,7 @@ class PertanyaanController extends Controller
 
         return view('pertanyaan.edit', [
             'pertanyaan' => $pertanyaan->load('topik'),
-            'topik' => Topik::all()
+            'topik' => Topik::orderBy('nama')->get(),
         ]);
     }
 
@@ -116,17 +116,17 @@ class PertanyaanController extends Controller
         $formFields = $request->validate([
             'judul' => ['required', 'max:60'],
             'deskripsi' => ['required', 'max:1000'],
-            'topik' => ['required', 'array', 'exists:topik,id_topik']
+            'topik' => ['required', 'array', 'min:1', 'max:3', 'exists:topik,id_topik']
         ]);
 
         $pertanyaan->judul = $formFields['judul'];
         $pertanyaan->deskripsi = $formFields['deskripsi'];
 
-        $pertanyaan->save();
+        $pertanyaan->update();
 
         $pertanyaan->topik()->sync($formFields['topik']);
 
-        return back()
+        return redirect('/pertanyaan/' . $pertanyaan->id_pertanyaan)
             ->with('success', 'Pertanyaan berhasil diperbarui!');
     }
 
