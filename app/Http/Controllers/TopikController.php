@@ -28,8 +28,10 @@ class TopikController extends Controller
      */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
+        $regex = '/^[a-zA-Z0-9\s]+$/';
+
         $formFields = $request->validate([
-            'nama' => ['required', 'max:15'],
+            'nama' => ['required', 'max:15', 'regex:' . $regex],
         ]);
 
         $topik = new Topik();
@@ -49,8 +51,10 @@ class TopikController extends Controller
      */
     public function update(Request $request, Topik $topik): \Illuminate\Http\RedirectResponse
     {
+        $regex = '/^[a-zA-Z0-9\s]+$/';
+
         $formFields = $request->validate([
-            'nama' => ['required', 'max:15'],
+            'nama' => ['required', 'max:15', 'regex:' . $regex],
         ]);
 
         $topik->nama = $formFields['nama'];
