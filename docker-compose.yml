@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   askfilkom:
-    image: ghcr.io/bagashiz/askfilkom:latest
+    image: ghcr.io/bagashiz/askfilkom:main
     container_name: askfilkom
     ports:
       - '8000:8000'
